@@ -11,9 +11,7 @@ public class Day1 {
     public static void main(String[] args) {
 
         // Parse input
-        List<Integer> input = read_input().stream()
-                .map((String num) -> Integer.valueOf(num))
-                .collect(Collectors.toList());
+        List<Integer> input = read_input();
 
         // Part 1
         int ctr = 0;
@@ -36,7 +34,7 @@ public class Day1 {
         System.out.println("Part 2: " + Integer.toString(ctr));
     }
 
-    public static List<String> read_input() {
+    public static List<Integer> read_input() {
         try {
             StringBuilder builder = new StringBuilder();
             File fileObj = new File("day1_input.txt");
@@ -45,7 +43,9 @@ public class Day1 {
                 builder.append(reader.nextLine() + " ");
             }
             reader.close();
-            return Arrays.asList(builder.toString().split(" "));
+            return Arrays.asList(builder.toString().split(" ")).stream()
+                    .map((String num) -> Integer.valueOf(num))
+                    .collect(Collectors.toList());
         } catch (FileNotFoundException e) {
             System.out.println("An error occured.");
             e.printStackTrace();
