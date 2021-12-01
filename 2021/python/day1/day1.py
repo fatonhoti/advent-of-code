@@ -5,7 +5,7 @@ def run():
     # Part 1
     ctr = 0
     pre = input[0]
-    for el in input:
+    for el in input[1:]:
         if el > pre:
             ctr += 1
         pre = el
