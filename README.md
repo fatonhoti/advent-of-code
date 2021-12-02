@@ -9,4 +9,4 @@ You don't need a computer science background to participate - just a little prog
 and some problem solving skills will get you pretty far. Nor do you need a fancy computer; 
 every problem has a solution that completes in at most 15 seconds on ten-year-old hardware.
 ```
-My solutions in Python and Java to this years problems will be posted here.
+My solutions will be posted here!
