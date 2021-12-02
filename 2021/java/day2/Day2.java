@@ -11,7 +11,6 @@ public class Day2 {
 
         // Parse input
         List<String> instructions = read_input();
-        System.out.println(instructions);
 
         // Part 1
         int depth = 0;
