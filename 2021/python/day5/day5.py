@@ -36,14 +36,7 @@ def calculate(*, segments, do_part_2=False):
             covered_points = get_covered_points_diagonally(p1, p2)
             update_points(points, covered_points)
 
-    return sum(
-        list(
-            map(
-                lambda _: 1,
-                filter(lambda p: points[p] >= 2, points),
-            )
-        )
-    )
+    return sum(1 for _ in filter(lambda p: points[p] >= 2, points))
 
 
 def run():
