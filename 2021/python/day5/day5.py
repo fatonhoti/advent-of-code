@@ -1,10 +1,3 @@
-def update_points(points, new_points):
-    for point in new_points:
-        if point not in points:
-            points[point] = 0
-        points[point] = points[point] + 1
-
-
 def calculate(*, segments, do_part_2=False):
     points = {}
     for segment in segments:
@@ -27,7 +20,12 @@ def calculate(*, segments, do_part_2=False):
                 covered_points.append((x, y))
                 x += 1
                 y += k
-        update_points(points, covered_points)
+
+        # Update the map of points and intersections
+        for point in covered_points:
+            if point not in points:
+                points[point] = 0
+            points[point] = points[point] + 1
 
     return sum(1 for _ in filter(lambda p: points[p] >= 2, points))
 
