@@ -22,12 +22,12 @@ def calculate(*, segments, do_part_2=False):
     for segment in segments:
         p1 = segment[0]  # (x1, y1)
         p2 = segment[1]  # (x2, y2)
-        if p1[0] == p2[0]:  # Same x-coordinate
+        if p1[0] == p2[0]:  # Vertical line
             if p1[1] > p2[1]:  # y1 > y2?
                 p1, p2 = p2, p1
             covered_points = [(p1[0], y) for y in range(p1[1], p2[1] + 1)]
             update_points(points, covered_points)
-        elif p1[1] == p2[1]:  # Same y-coordinate
+        elif p1[1] == p2[1]:  # Horizontal line
             if p1[0] > p2[0]:  # x1 > x2?
                 p1, p2 = p2, p1
             covered_points = [(x, p1[1]) for x in range(p1[0], p2[0] + 1)]
