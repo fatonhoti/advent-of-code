@@ -42,9 +42,10 @@ def calculate(*, segments, do_part_2=False):
 def run():
 
     # Parse input
-    segments = []
+    segments: list[tuple(int, int)] = []
     with open("day5_input.txt") as f:
         for line in f.readlines():
+            # segment = [(x1, y1), (x2, y2)]
             segments.append(
                 sorted(
                     [
