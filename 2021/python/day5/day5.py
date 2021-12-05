@@ -39,7 +39,7 @@ def calculate(*, segments, do_part_2=False):
     return sum(
         list(
             map(
-                lambda k: 1 if points[k] >= 2 else 0,
+                lambda _: 1,
                 filter(lambda p: points[p] >= 2, points),
             )
         )
