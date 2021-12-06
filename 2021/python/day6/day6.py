@@ -3,7 +3,7 @@ from collections import Counter
 
 def simulate(fishes, days):
     for _ in range(days):
-        # Amount of newborns = amount of fishes with 0 days left = fishes[i]
+        # Amount of newborns = amount of fishes with 0 days left = fishes[0]
         newborns = fishes[0]
         fishes = fishes[1:] + [newborns]  # Rotate array to the left
         if newborns:
