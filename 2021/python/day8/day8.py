@@ -17,7 +17,7 @@ def part2(input):
 
 def determine(signal_patterns):
     """
-    A more elegant, actually general solution, is being worked one.
+    A more elegant actually general solution is being worked on.
     This solution though works perfectly fine for the exact given problem.
     The idea is analysing the appropriate set operations to make with pen and
     paper in order to solve for each segment and then just implementing the
