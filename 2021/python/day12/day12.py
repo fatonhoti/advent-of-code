@@ -85,12 +85,8 @@ def run():
     print(f"Part 1: {len(paths)}")
 
     # Part 2
-    import time
-
-    start_time = time.time()
     paths = dfs2(graph)
     print(f"Part 2: {len(paths)}")
-    print("--- %s seconds ---" % (time.time() - start_time))
 
 
 if __name__ == "__main__":
