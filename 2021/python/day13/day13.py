@@ -50,10 +50,10 @@ def run():
                 x, y = line.strip().split(",")
                 points.append((int(x), int(y)))
 
-        # Build an emptyg grid
-        cols = max(x for x, _ in points) + 1
-        rows = max(y for _, y in points) + 1
-        grid = [[None for _ in range(cols)] for _ in range(rows)]
+        # Build an empty grid
+        cols = max(x for x, _ in points)
+        rows = max(y for _, y in points)
+        grid = [[None for _ in range(cols + 1)] for _ in range(rows + 1)]
 
         # Populate the grid
         for col, row in points:
