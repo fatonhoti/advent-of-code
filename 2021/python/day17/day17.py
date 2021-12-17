@@ -1,32 +1,33 @@
 from math import sqrt, ceil
 
 
-def simulate_probe(init_dx, init_dy, x_range, y_range):
-    probe = {"x": 0, "y": 0, "dx": init_dx, "dy": init_dy, "max_y": 0}
+def launch_probe(init_dx, init_dy, x_range, y_range):
+    x = 0
+    y = 0
+    dx = init_dx
+    dy = init_dy
+    max_y = 0
     while True:
-        # Update the position of the probe
-        probe["x"] += probe["dx"]
-        probe["y"] += probe["dy"]
-        if probe["y"] > probe["max_y"]:
-            probe["max_y"] = probe["y"]
+        # Update probe's position
+        x += dx
+        y += dy
 
-        # Check if the probe is in the target area
-        if probe["x"] in x_range and probe["y"] in y_range:
-            return True, probe["max_y"]
-
-        # Check if overshot in x- or y direction
-        if probe["x"] > x_range[-1] or y_range[0] < 0 and probe["y"] < y_range[0]:
+        # Check if probe overshot
+        if y < y_range[0] or x > x_range[-1]:
             break
 
-        # Update dx
-        if probe["dx"] > 0:
-            probe["dx"] -= 1
+        # Check if probe in target area
+        if x in x_range and y in y_range:
+            return True, max_y
 
-        if probe["dx"] < 0:
-            probe["dx"] += 1
+        # Update max height reached
+        if y > max_y:
+            max_y = y
 
-        # Update dy
-        probe["dy"] -= 1
+        # Update velocity
+        if dx != 0:
+            dx -= 1
+        dy -= 1
 
     return False, None
 
@@ -46,19 +47,22 @@ def run():
     # The minimum dx can be to even end up in the range.
     min_dx = ceil(sqrt(2 * x_min_max[0] + (1 / 4)) - (1 / 2))
 
-    heights = []
-    for dy in range(y_range[0], 1000):
+    height = 0
+    count = 0
+    for dy in range(y_range[0], (-1) * y_range[0]):
         for dx in range(min_dx, x_range[-1] + dy - y_range[0] + 1):
-            velocity_good, max_y = simulate_probe(dx, dy, x_range, y_range)
+            velocity_good, max_y = launch_probe(dx, dy, x_range, y_range)
             if velocity_good:
-                heights.append(max_y)
-
-    # Part 2
-    part1 = max(heights)
-    print(f"Part 1: {part1}")
+                count += 1
+                if max_y > height:
+                    height = max_y
 
     # Part 1
-    part2 = len(heights)
+    part1 = height
+    print(f"Part 1: {part1}")
+
+    # Part 2
+    part2 = count
     print(f"Part 2: {part2}")
 
 
