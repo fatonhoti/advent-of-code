@@ -50,7 +50,7 @@ def run():
     height = 0
     count = 0
     for dy in range(y_range[0], (-1) * y_range[0]):
-        for dx in range(min_dx, x_range[-1] + dy - y_range[0] + 1):
+        for dx in range(min_dx, x_range[-1] + 1):
             velocity_good, max_y = launch_probe(dx, dy, x_range, y_range)
             if velocity_good:
                 count += 1
