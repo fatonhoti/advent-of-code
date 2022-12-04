@@ -15,7 +15,7 @@ def run():
     print(f"Part 1: {s}")
 
     # Part 2
-    s = sum(1 for (a, b), (c, d) in pairs if set(range(a, b + 1)) & set(range(c, d + 1)))
+    s = sum(1 for (a,b), (c,d) in pairs if not(c > b or d < a))
     print(f"Part 2: {s}")
 
     """
