@@ -60,7 +60,7 @@ def run():
                     a_cells.append((r, c))
                 rr.append(cell)
             grid.append(rr)
-
+        
     # Part 1
     path = bfs(grid, start, end)
     print(f"Part 1: {len(path)}")
