@@ -1,3 +1,4 @@
+# coding=utf8
 def manhattan(a, b):
     ar, ac = a
     br, bc = b
@@ -22,37 +23,19 @@ def run():
             data[(sr, sc)] = (br, bc)
 
     def search(target_row):
-        pts = set()
+        left = 1e9
+        right = -1e9
         for sensor, beacon in data.items():
             d_to_own_beacon = manhattan(sensor, beacon)
             d_to_target_row = abs(sensor[0] - target_row)
-            if d_to_own_beacon >= d_to_target_row:
-                # Find all points on the target row that are exactly 'd' units away from sensor
-                i = d_to_own_beacon - d_to_target_row
-                if sensor[0] == target_row:
-                    r = sensor[0]
-                    left_cols = range(sensor[1] - i, sensor[1])
-                    right_cols = range(sensor[1] + 1, sensor[1] + i)
-                    pts |= set(list(zip([r] * len(left_cols), left_cols)))
-                    pts |= set(list(zip([r] * len(right_cols), right_cols)))
-                else:
-                    r = (
-                        sensor[0] + d_to_target_row
-                        if sensor[0] < target_row
-                        else sensor[0] - d_to_target_row
-                    )
-                    pt = (r, sensor[1])
-                    pts.add(pt)
-                    for k in range(1, i + 1):
-                        pt_l = (r, sensor[1] - k)
-                        pt_r = (r, sensor[1] + k)
-                        pts.add(pt_l)
-                        pts.add(pt_r)
-        return pts
+            if (i := d_to_own_beacon - d_to_target_row) >= 0:
+                left = min(left, sensor[1] - i)
+                right = max(right, sensor[1] + i)
+        return (left, right)
 
     # Part 1
-    pts = search(2_000_000)
-    print(f"Part 1: {len(pts) - 1}")
+    l, r = search(2_000_000)
+    print(f"Part 1: {r - l}")
 
     # Part 2
     for row in range(4_000_000):
@@ -71,16 +54,20 @@ def run():
         for i in range(len(nb_list) - 1):
             (l1, r1), (l2, r2) = nb_list[i : i + 2]
             if l1 <= l2 and r1 >= r2:
+                # The second interval is included in the first interval
                 nb_list[i + 1] = (l1, r1)
-            elif l2 <= r1 <= r2 or l2 == r1 + 1:
+            elif l2 <= r1 <= r2 or l2 - r1 == 1:
+                # The first interval can be extended to stop at the second interval's right border
                 nb_list[i + 1] = [l1, r2]
             else:
+                # Can't merge it with anything
                 merged.append((l1, r1))
         merged.append(nb_list[-1])
 
-        # Intersection?
+        # Have we found an intersection?
         if len(merged) > 1:
             print(f"Part 2: {(merged[0][1] + 1) * 4_000_000 + row}")
+            break
 
     """
     Part 1: 5525990
