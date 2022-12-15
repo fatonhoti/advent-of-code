@@ -28,17 +28,14 @@ def run():
                 # Try to move one step down
                 if (sr + 1, sc) not in pts:
                     sr += 1
-                    continue
                 # Try to move down and left
                 elif (sr + 1, sc - 1) not in pts:
                     sr += 1
                     sc -= 1
-                    continue
                 # Try to move down and right
                 elif (sr + 1, sc + 1) not in pts:
                     sr += 1
                     sc += 1
-                    continue
                 else:
                     # Could not move anywhere
                     pts.add((sr, sc))
@@ -58,17 +55,14 @@ def run():
                 # Try to move it one step down
                 if (sr + 1, sc) not in pts and sr + 1 < highest + 2:
                     sr += 1
-                    continue
                 # Try to move down and left
                 elif (sr + 1, sc - 1) not in pts and sr + 1 < highest + 2:
                     sr += 1
                     sc -= 1
-                    continue
                 # Try to move down and right
                 elif (sr + 1, sc + 1) not in pts and sr + 1 < highest + 2:
                     sr += 1
                     sc += 1
-                    continue
                 else:
                     # Could not move anywhere
                     pts.add((sr, sc))
@@ -78,10 +72,12 @@ def run():
                 return i
 
     # Part 1
-    print(f"Part 1: {simulate(occupied_points.copy())}")
+    part_1 = simulate(occupied_points.copy())
+    print(f"Part 1: {part_1}")
 
     # Part 2
-    print(f"Part 2: {simulate2(occupied_points)}")
+    part_2 = simulate2(occupied_points)
+    print(f"Part 2: {part_2}")
 
     """
     Part 1: 655
