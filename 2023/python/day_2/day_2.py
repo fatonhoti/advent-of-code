@@ -1,3 +1,5 @@
+from collections import defaultdict
+
 def run():
     day_n = __file__.split("\\")[-1][:-3]
     
@@ -7,22 +9,14 @@ def run():
             gid, sets = line.split(":")
             gid = int(gid.split()[1])
             sets = [s.strip() for s in sets.split(";")]
-            max_red = 0
-            max_green = 0
-            max_blue = 0
+            m = defaultdict(int)
             for s in sets:
                 for cube in s.split(", "):
                     amount, color = cube.split()
                     amount = int(amount)
-                    if color == "red" and amount > max_red:
-                        max_red = amount
-                    if color == "green" and amount > max_green:
-                        max_green = amount
-                    if color == "blue" and amount > max_blue:
-                        max_blue = amount
-            max_colors_per_game[gid] = (max_red, max_green, max_blue)
+                    m[color] = max(m[color], amount)
+            max_colors_per_game[gid] = (m["red"], m["green"], m["blue"])
 
-    # Part 1
     s1 = 0
     s2 = 0
     for game_id, (mr, mg, mb) in max_colors_per_game.items():
