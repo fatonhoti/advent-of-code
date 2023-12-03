@@ -6,7 +6,7 @@ def run():
 
     grid = []
     with open(f"{day_n}.txt", "r") as f:
-        grid = ["." + line.strip() + "." for line in f.readlines()]
+        grid = [line.strip() + "." for line in f.readlines()]
 
     width = len(grid[0])
     height = len(grid)
