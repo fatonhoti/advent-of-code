@@ -23,10 +23,8 @@ def run():
         sum1 += card_pts
 
         # Part 2
-        for i in range(1, num_matches + 1):
-            next_card_id = card_id + i
-            if next_card_id < len(cards):
-                cards[next_card_id][1] += n_copies
+        for i in range(num_matches):
+            cards[card_id + 1 + i][1] += n_copies
 
     print(f"Part 1: {sum1}")
     print(f"Part 2: {sum2}")
