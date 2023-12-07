@@ -90,5 +90,6 @@ def run():
         min_loc = min(min_loc, range_to_loc(maps, rng))
     print(f"Part 2: {min_loc}")
 
+
 if __name__ == "__main__":
     run()
