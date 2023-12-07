@@ -1,11 +1,6 @@
 from collections import Counter
 from functools import cmp_to_key
 
-card_to_score = {}
-cards = ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"]
-for value, card in enumerate(cards[::-1], 2):
-    card_to_score[card] = value
-
 
 def run():
     day_n = __file__.split("\\")[-1][:-3]
@@ -19,19 +14,31 @@ def run():
             hands.append((hand, bid))
             hands2.append((transform_hand(hand), hand, bid))
 
+    card_to_score = {}
+    for value, card in enumerate(
+        ["A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"][::-1], 2
+    ):
+        card_to_score[card] = value
+
     # Part 1
-    hands = sorted(hands, key=cmp_to_key(hand_compare_wrapper(card_to_score, False)))
-    s1 = 0
-    for i, (_, bid) in enumerate(hands[::-1], 1):
-        s1 += i * bid
+    hands = sorted(
+        hands,
+        key=cmp_to_key(
+            hand_compare_wrapper(card_scores=card_to_score, tie_with_original=False)
+        ),
+    )
+    s1 = sum(i * bid for i, (_, bid) in enumerate(hands[::-1], 1))
     print(f"Part 1: {s1}")
 
     # Part 2
     card_to_score["J"] = 1
-    hands2 = sorted(hands2, key=cmp_to_key(hand_compare_wrapper(card_to_score, True)))
-    s2 = 0
-    for i, (_, _, bid) in enumerate(hands2[::-1], 1):
-        s2 += i * bid
+    hands2 = sorted(
+        hands2,
+        key=cmp_to_key(
+            hand_compare_wrapper(card_scores=card_to_score, tie_with_original=True)
+        ),
+    )
+    s2 = sum(i * bid for i, (_, _, bid) in enumerate(hands2[::-1], 1))
     print(f"Part 2: {s2}")
 
 
@@ -43,35 +50,27 @@ def hand_compare_wrapper(card_scores, tie_with_original):
 
 
 def hand_to_type(hand):
-    cnt = dict(Counter(hand))
-    vals = sorted(list(cnt.values()), reverse=True)
-
+    vals = sorted(list(dict(Counter(hand)).values()), reverse=True)
     # high card
-    if len(cnt) == len(hand):
+    if vals == [1, 1, 1, 1, 1]:
         return 1
-
     # one pair
-    if vals[0] == 2 and vals[1] == 1 and vals[2] == 1 and vals[-1] == 1:
+    if vals == [2, 1, 1, 1]:
         return 2
-
     # two pair
-    if vals[0] == 2 and vals[1] == 2 and vals[-1] == 1:
+    if vals == [2, 2, 1]:
         return 3
-
     # three of a kind
-    if vals[0] == 3 and vals[1] == 1 and vals[-1] == 1:
+    if vals == [3, 1, 1]:
         return 4
-
     # full house
-    if vals[0] == 3 and vals[1] == 2:
+    if vals == [3, 2]:
         return 5
-
     # four of a kind
-    if vals[0] == 4 and vals[-1] == 1:
+    if vals == [4, 1]:
         return 6
-
     # five of a kind
-    if len(cnt) == 1:
+    if vals == [5]:
         return 7
 
 
@@ -109,41 +108,12 @@ def transform_hand(hand):
     if "J" not in hand:
         return hand
 
-    def get_best_hand(original_hand, cards, current_best, current_hand):
-        if not original_hand:
-            if len(current_best) == 0:
-                current_best.append(current_hand)
-            else:
-                current_best[0] = (
-                    current_hand
-                    if hand_compare(
-                        [current_hand], [current_best[0]], card_to_score, False
-                    )
-                    == -1
-                    else current_best[0]
-                )
-            return
+    freqs = Counter(hand)
+    if freqs.pop("J") == 5:
+        return "JJJJJ"
 
-        card = original_hand[0]
-        rest_hand = original_hand[1:]
-        if card == "J":
-            # The card is a joker, create new hands
-            # where each new hand replaces current "J" with other card
-            for card in cards[card]:
-                get_best_hand(rest_hand, cards, current_best, current_hand + card)
-        else:
-            # The card was not a joker, add back the original card to the hand
-            # and on to the next
-            get_best_hand(rest_hand, cards, current_best, current_hand + card)
-
-    best_reworked_hand = []
-    get_best_hand(
-        hand,
-        {"J": ["A", "K", "Q", "T", "9", "8", "7", "6", "5", "4", "3", "2"]},
-        best_reworked_hand,
-        "",
-    )
-    return best_reworked_hand[0]
+    most_frequent_card = {v: k for k, v in freqs.items()}[max(freqs.values())]
+    return hand.replace("J", most_frequent_card)
 
 
 if __name__ == "__main__":
