@@ -33,27 +33,25 @@ def fix_report(m, report):
 def run():
     day_n = __file__.split("\\")[-1][:-3]
     with open(f"{day_n}.txt", "r") as f:
-        lines = f.readlines()
+        os, rs = f.read().split("\n\n")
 
-    m = defaultdict(set)
-    i = 0
-    while (line := lines[i]) != "\n":
-        a, b = list(map(int, line.split("|")))
-        m[a].add(b)
-        i += 1
+        orderings = defaultdict(set)
+        for o in os.split("\n"):
+            a, b = list(map(int, o.split("|")))
+            orderings[a].add(b)
 
-    reports = []
-    for report in lines[i + 1 :]:
-        reports.append(list(map(int, report.strip().split(","))))
+        reports = []
+        for r in rs.split("\n"):
+            reports.append(list(map(int, r.strip().split(","))))
 
     part1 = 0
     part2 = 0
     for report in reports:
-        ok = is_report_in_order(m, report)
+        ok = is_report_in_order(orderings, report)
         if ok:
             part1 += report[len(report) // 2]
         else:
-            fixed_report = fix_report(m, report)
+            fixed_report = fix_report(orderings, report)
             part2 += fixed_report[len(fixed_report) // 2]
 
     print(f"Part 1: {part1}")
