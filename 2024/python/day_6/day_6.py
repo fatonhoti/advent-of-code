@@ -1,59 +1,42 @@
-def oob(x, y, nRows, nCols):
-    return y < 0 or y >= nRows or x < 0 or x >= nCols
-
-
-def simulate_part1(px, py, dx, dy, grid, max_iterations=None):
+def simulate_part1(px, py, dx, dy, grid):
     N = len(grid)
     M = len(grid[0])
+
     seen = set()
-    seen.add((px, py))
+    seen.add(py * M + px)
 
     i = 0
     while True:
+        if i > (4 * N * M):
+            # loop!
+            return 0
+        i += 1
+
         nx = px + dx
         ny = py + dy
-
-        if max_iterations and i >= max_iterations:
-            return None
-
-        if oob(nx, ny, N, M):
+        if ny < 0 or ny >= N or nx < 0 or nx >= M:
             break
         elif grid[ny][nx] == "#":
             # 90 deg clockwise turn given that +y is downwards => (x, y) => (y, -x)
-            t = dy
-            dy = dx
-            dx = -t
+            dx, dy = -dy, dx
         else:
             px = nx
             py = ny
-            seen.add((px, py))
+            seen.add(py * M + px)
 
-        i += 1
-
-    return len(seen)
+    return len(seen), seen
 
 
-def simulate_part2(px, py, dx, dy, grid):
-    N = len(grid)
+def simulate_part2(px, py, dx, dy, grid, seen):
     M = len(grid[0])
-
-    orgx, orgy = px, py
-    orgdx, orgdy = dx, dy
-
     part2 = 0
-    for y in range(N):
-        for x in range(M):
-            if grid[y][x] == ".":
-                # set blocker on this cell
-                grid[y][x] = "#"
-
-                # returns None if loop identified
-                if simulate_part1(orgx, orgy, orgdx, orgdy, grid, max_iterations=N * M) == None:
-                    part2 += 1
-
-                # reset cell
-                grid[y][x] = "."
-
+    for idx in seen:
+        x = idx % M
+        y = idx // M
+        grid[y][x] = "#"
+        if simulate_part1(px, py, dx, dy, grid) == 0:
+            part2 += 1
+        grid[y][x] = "."
     return part2
 
 
@@ -67,29 +50,20 @@ def run():
         for row in f.readlines():
             grid.append(list(row.strip()))
 
-    # find the guard
-    px = py = dx = dy = None
-    found = False
+    px = py = None
+    dx, dy = (0, -1)
     for y in range(len(grid)):
         for x in range(len(grid[0])):
-            if (cell := grid[y][x]) in {"<", "^", ">", "v"}:
+            if grid[y][x] in {"<", "^", ">", "v"}:
                 px, py = x, y
-                dx, dy = {
-                    "<": [-1, 0],
-                    "^": [0, -1],
-                    ">": [1, 0],
-                    "v": [0, 1],
-                }[cell]
-                found = True
-                break
-        if found:
-            break
 
-    part1 = simulate_part1(px, py, dx, dy, grid)
-    print(f"Part 1: {part1}")
+                part1, seen = simulate_part1(px, py, dx, dy, grid)
+                print(f"Part 1: {part1}")
 
-    part2 = simulate_part2(px, py, dx, dy, grid)
-    print(f"Part 2: {part2}")
+                part2 = simulate_part2(px, py, dx, dy, grid, seen)
+                print(f"Part 2: {part2}")
+
+                exit(0)
 
 
 if __name__ == "__main__":
