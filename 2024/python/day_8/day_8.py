@@ -1,37 +1,33 @@
+USE_REAL_INPUT = True
+
 from collections import defaultdict
 
 
 def find_nodes(a, b, W, H, inf=False):
 
     def traverse(sx, sy, dx, dy):
-        in_bounds = lambda c, r: 0 <= c < W and 0 <= r < H
         ns = []
         while True:
             sx += dx
             sy += dy
-            if not in_bounds(sx, sy):
+            if not (0 <= sx < W and 0 <= sy < H):
                 break
             ns.append((sx, sy))
             if not inf:
                 break
         return ns
 
-    def slope(a, b):
-        x1, y1 = a
-        x2, y2 = b
-        return x2 - x1, y2 - y1
-
     x1, y1 = a
     x2, y2 = b
 
-    dx, dy = slope(a, b)
+    dx = x2 - x1
+    dy = y2 - y1
+
     nodes = traverse(x1, y1, -dx, -dy) + traverse(x2, y2, dx, dy)
     return nodes
 
 
 def run():
-    USE_REAL_INPUT = True
-
     day_n = __file__.split("\\")[-1][:-3]
     file = f"{day_n}.txt" if USE_REAL_INPUT else f"test.txt"
     with open(file, "r") as f:
