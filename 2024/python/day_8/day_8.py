@@ -1,34 +1,7 @@
 from collections import defaultdict
 
 
-def slope(a, b):
-    x1, y1 = a
-    x2, y2 = b
-    return x2 - x1, y2 - y1
-
-
-def in_line(a, b):
-    x1, y1 = a
-    x2, y2 = b
-    dx, dy = slope(a, b)
-    if x2 > x1:
-        while x1 < x2:
-            x1 += dx
-            y1 += dy
-            if x1 == x2 and y1 == y2:
-                return True
-    elif x1 > x2:
-        while x2 < x1:
-            x2 -= dx
-            y2 -= dy
-            if x1 == x2 and y1 == y2:
-                return True
-
-    return False
-
-
 def find_nodes(a, b, W, H, inf=False):
-
 
     def traverse(sx, sy, dx, dy):
         in_bounds = lambda c, r: 0 <= c < W and 0 <= r < H
@@ -43,11 +16,16 @@ def find_nodes(a, b, W, H, inf=False):
                 break
         return ns
 
+    def slope(a, b):
+        x1, y1 = a
+        x2, y2 = b
+        return x2 - x1, y2 - y1
+
     x1, y1 = a
     x2, y2 = b
-    
+
     dx, dy = slope(a, b)
-    nodes = traverse(x2, y2, dx, dy) + traverse(x1, y1, -dx, -dy)
+    nodes = traverse(x1, y1, -dx, -dy) + traverse(x2, y2, dx, dy)
     return nodes
 
 
@@ -73,9 +51,8 @@ def run():
             a = locs[i]
             for j in range(i + 1, len(locs)):
                 b = locs[j]
-                if in_line(a, b):
-                    seen.update(find_nodes(a, b, W, H, inf=False))
-                    seen2.update(find_nodes(a, b, W, H, inf=True) + [a, b])
+                seen.update(find_nodes(a, b, W, H, inf=False))
+                seen2.update(find_nodes(a, b, W, H, inf=True) + [a, b])
 
     print(f"Part 1: {len(seen)}")
     print(f"Part 2: {len(seen2)}")
