@@ -21,6 +21,8 @@ def test(y, ns, operators):
     for comb in combs(ns, operators):
         res = operators[comb[0]](ns[0], ns[1])
         for i in range(1, len(comb)):
+            if res > y:
+                break
             res = operators[comb[i]](res, ns[i + 1])
 
         if res == y:
