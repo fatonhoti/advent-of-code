@@ -4,12 +4,13 @@ from math import log10
 USE_REAL_INPUT = True
 
 
-def split(n):
-    s = str(n)
-    return int(s[: len(s) // 2]), int(s[len(s) // 2 :])
+def split(n, POWERS = [10**i for i in range(10)]):
+    digits = int(log10(n)) + 1
+    power = POWERS[digits // 2]
+    return (n // power, n % power)
 
 
-def simulate2(stones, iters):
+def simulate(stones, iters):
     seen = defaultdict(int)
     for stone in stones:
         seen[stone] = 1
@@ -19,7 +20,7 @@ def simulate2(stones, iters):
         for stone, freq in seen.items():
             if stone == 0:
                 t[1] += freq
-            elif len(str(stone)) % 2 == 0:
+            elif (int(log10(stone)) + 1) % 2 == 0:
                 x1, x2 = split(stone)
                 t[x1] += freq
                 t[x2] += freq
@@ -37,10 +38,10 @@ def run():
     with open(file, "r") as f:
         stones = list(map(int, f.readline().strip().split()))
 
-    part1 = simulate2(stones, 25)
+    part1 = simulate(stones, 25)
     print(f"Part 1: {part1}")
 
-    part2 = simulate2(stones, 75)
+    part2 = simulate(stones, 75)
     print(f"Part 2: {part2}")
 
 
