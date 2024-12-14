@@ -1,5 +1,4 @@
 from PIL import Image
-from copy import deepcopy
 
 USE_REAL_INPUT = True
 
@@ -25,13 +24,11 @@ def run():
         tm = [[0] * W for _ in range(H)]
 
         robots = []
-        robots2 = []
         for line in f.readlines():
             p, v = line.strip().split()
             p = list(map(int, p.split("=")[1].split(",")))
             v = list(map(int, v.split("=")[1].split(",")))
             robots.append([p, v])
-            robots2.append([p, v])
             tm[p[1]][p[0]] += 1
     
 
@@ -43,7 +40,6 @@ def run():
         ny = (py + seconds*vy) % H
         tm[py][px] -= 1
         tm[ny][nx] += 1
-        robots[i][0] = [nx, ny]
 
     tl = 0
     for r in range((H - 1) // 2):
@@ -69,14 +65,36 @@ def run():
     print(f"Part 1: {part1}")
 
     # part 2
-    for s in range(6350, 6400):
+    for s in range(0, 10000):
+        # generate the final tilemap
         res = [[0] * W for _ in range(H)]
-        for i in range(len(robots2)):
-            (px, py), (vx, vy) = robots2[i]
+        for i in range(len(robots)):
+            (px, py), (vx, vy) = robots[i]
             nx = (px + s*vx) % W
             ny = (py + s*vy) % H
             res[ny][nx] += 1
-        create_jpeg_image(res, W, H, f"{s}.jpg")
+        
+        # perform a convolution, goal is to find a kernel_size x kernel_size region of robots
+        kernel_size = 5
+        for r in range(H - kernel_size + 1):
+            min_r, max_r = r, r + kernel_size
+            for c in range(W - kernel_size + 1):
+                min_c, max_c = c, c + kernel_size
+
+                # check if whole region is filled with robots                
+                ok = True
+                for rr in range(min_r, max_r):
+                    for cc in range(min_c, max_c):
+                        if res[rr][cc] == 0:
+                            ok = False
+                            break
+                    if not ok:
+                        break
+
+                if ok:
+                    print(f"Part 2: {s}")
+                    create_jpeg_image(res, W, H, f"{s}.jpeg")
+                    exit(0)
 
 
 if __name__ == "__main__":
